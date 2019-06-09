@@ -1,0 +1,43 @@
+
+
+Explore config file
+cat pods/monolith.yaml
+
+
+Create the monolith pod
+kubectl create -f pods/monolith.yaml
+Examine pods
+kubectl get pods
+It may take a few seconds before the monolith pod is up and running as the monolith container image needs to be pulled from the Docker Hub before we can run it.
+
+Use the kubectl describe command to get more information about the monolith pod.
+
+kubectl describe pods monolith
+Cloud shell 1: set up port-forwarding
+kubectl port-forward monolith 10080:80
+Open new Cloud Shell session 2
+curl http://127.0.0.1:10080
+
+curl http://127.0.0.1:10080/secure
+Cloud shell 2 - log in
+curl -u user http://127.0.0.1:10080/login
+
+curl -H "Authorization: Bearer <token>" http://127.0.0.1:10080/secure
+View logs
+kubectl logs monolith
+kubectl logs -f monolith
+
+In Cloud Shell 3
+curl http://127.0.0.1:10080
+In Cloud Shell 2
+Exit log watching (Ctrl-C)
+
+You can use the kubectl exec command to run an interactive shell inside the monolith Pod. This can come in handy when you want to troubleshoot from within a container:
+
+kubectl exec monolith --stdin --tty -c monolith /bin/sh
+For example, once we have a shell into the monolith container we can test external connectivity using the ping command.
+
+ping -c 3 google.com
+When you’re done with the interactive shell be sure to logout.
+
+exit
